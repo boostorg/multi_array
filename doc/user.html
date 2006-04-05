@@ -70,6 +70,8 @@ available (and described below).
 
       <li><a href="#sec_reshape">Changing an Array's Shape</a>
 
+      <li><a href="#sec_resize">Resizing an Array</a>
+
       <li><a href="#sec_concepts">MultiArray Concept</a>
 
       <li><a href="#sec_testcases">Test Cases</a>
@@ -154,22 +156,20 @@ main () {
 <a name="sec_components"></a>
 <h2>MultiArray Components</h2>
 
-Boost.MultiArray provides three user-level class templates:
+Boost.MultiArray's implementation (boost/multi_array.hpp) provides three user-level class templates:
 
 <ol>
-      <li><a href="./reference.html#multi_array"><tt>multi_array</tt></a> -
-      defined in "boost/multi_array.hpp",
+      <li><a href="./reference.html#multi_array"><tt>multi_array</tt></a>, 
 
-      <li><a href="./reference.html#multi_array_ref"><tt>multi_array_ref</tt></a> -
-      defined in "boost/multi_array_ref.hpp", and
+      <li><a href="./reference.html#multi_array_ref"><tt>multi_array_ref</tt></a>, and 
 
-      <li><a href="./reference.html#const_multi_array_ref"><tt>const_multi_array_ref</tt></a>  -
-      defined in "boost/multi_array_ref.hpp"
+      <li><a href="./reference.html#const_multi_array_ref"><tt>const_multi_array_ref</tt></a>  
 </ol>
 
 <tt>multi_array</tt> is a container template.  When instantiated, it
 allocates space for the number of elements corresponding to the
-dimensions specified at construction time.  
+dimensions specified at construction time.  A <tt>multi_array</tt> may
+also be default constructed and resized as needed.
 
 <p>
 <tt>multi_array_ref</tt> adapts an existing array of data to provide
@@ -185,8 +185,8 @@ thus wrap pointers of type <i>T const*</i>.
 The three components exhibit very similar behavior.  Aside from
 constructor parameters, <tt>multi_array</tt> and
 <tt>multi_array_ref</tt> export the same interface.
-<tt>const_multi_array_ref</tt> provides only the const portions
-of the <tt>multi_array_ref</tt> interface.
+<tt>const_multi_array_ref</tt> provides only the constness-preserving
+portions of the <tt>multi_array_ref</tt> interface.
 
 <a name="sec_assignment"></a>
 <h2>Construction and Assignment</h2>
@@ -232,8 +232,9 @@ void my_function() {
 
 <a name="sec_dimensions"></a>
 <h2>Specifying Array Dimensions</h2>
-When creating one of the Boost.MultiArray components, it is necessary
-to specify both the number of dimensions and the extent of each.
+When creating most of the Boost.MultiArray components, it is necessary
+to specify both the number of dimensions and the extent of each
+(<tt>boost::multi_array</tt> also provides a default constructor).
 Though the number of dimensions is always specified as a template
 parameter, two separate mechanisms have been provided to specify the
 extent of each.
@@ -299,6 +300,14 @@ from the Collection for the N dimensions of the container.
 </blockquote>
 This can be useful for writing dimension-independent code, and under
 some compilers may yield higher performance than <tt>operator[].</tt>
+
+<p>
+By default, both of the above element access methods perform range
+checking.  If a supplied index is out of the range defined for an
+array, an assertion will abort the program.  To disable range
+checking (for performance reasons in production releases), define
+the <tt>BOOST_DISABLE_ASSERTS</tt> preprocessor macro prior to
+including multi_array.hpp in your application.
 
 <a name="sec_views"></a>
 <h2>Creating Views</h2>
@@ -551,6 +560,36 @@ elements contained remains the same.
 <p>
 Note that reshaping an array does not affect the indexing.
 
+<a name="sec_resize"></a>
+<h2>Resizing an Array</h2>
+
+The <tt>boost::multi_array</tt> class provides an element-preserving
+resize operation.  The number of dimensions must remain the same, but
+the extent of each dimension may be increased and decreased as
+desired.  When an array is made strictly larger, the existing elements
+will be preserved by copying them into the new underlying memory and
+subsequently destructing the elements in the old underlying memory.
+Any new elements in the array are default constructed.  However, if
+the new array size shrinks some of the dimensions, some elements will
+no longer be available.
+
+<h3>Example</h3>
+<blockquote>
+<pre>
+  typedef boost::multi_array&lt;int, 3&gt; array_type;
+  typedef array_type::extent_range range;
+
+  array_type::extent_gen extents;
+  array_type A(extents[3][3][3]);
+  A[0][0][0] = 4;
+  A[2][2][2] = 5;
+  A.resize(extents[2][3][4]);
+  assert(A[0][0][0] == 4);
+  // A[2][2][2] is no longer valid.
+</pre>
+</blockquote>
+
+
 <a name="sec_concepts"></a>
 <h2>MultiArray Concept</h2>
 Boost.MultiArray defines and uses the 
@@ -582,7 +621,7 @@ cases can be found <a href="./test_cases.html">here</a>.
     arrays.
 
 This library is analogous to 
-<a href="">boost::array</a> in that it augments C style N-dimensional
+<a href="../../array/index.html">boost::array</a> in that it augments C style N-dimensional
 arrays, as <tt>boost::array</tt> does for C one-dimensional arrays.
 
 
@@ -624,9 +663,7 @@ arrays, as <tt>boost::array</tt> does for C one-dimensional arrays.
 <a href="mailto:garcia@.cs.indiana.edu">Ronald Garcia</a>
 </address>
 <!-- Created: Fri Jun 29 10:53:07 EST 2001 -->
-<!-- hhmts start -->
-Last modified: Tue Sep 10 11:14:15 EST 2002
-<!-- hhmts end -->
+<!-- hhmts start -->Last modified: Tue Feb  7 17:15:50 EST 2006 <!-- hhmts end -->
 
 </body>
 </html>
