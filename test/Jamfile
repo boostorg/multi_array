@@ -49,3 +49,16 @@ test-suite multi_array
       [ run resize.cpp ]
       [ compile concept_checks.cpp ]
     ;
+
+import python ;
+
+extension python_module
+  : python_module.cpp
+    <template>@boost/libs/python/build/extension
+  ;
+
+boost-python-runtest test_multiarray
+  : test_multi_array.py
+    <pyd>python_module
+  ;
+
