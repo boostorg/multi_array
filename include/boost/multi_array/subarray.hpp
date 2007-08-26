@@ -22,6 +22,7 @@
 #include "boost/multi_array/concept_checks.hpp"
 #include "boost/limits.hpp"
 #include "boost/type.hpp"
+#include "boost/multi_array/algorithm.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <functional>
@@ -30,6 +31,7 @@ namespace boost {
 namespace detail {
 namespace multi_array {
 
+  using ::boost::mpl::int_;
 //
 // const_sub_array
 //    multi_array's proxy class to allow multiple overloads of
@@ -66,8 +68,10 @@ public:
 
   template <typename OPtr>
   const_sub_array (const const_sub_array<T,NumDims,OPtr>& rhs) :
-    base_(rhs.base_), extents_(rhs.extents_), strides_(rhs.strides_),
-    index_base_(rhs.index_base_) {
+    base_(rhs.base_) {
+    unroll_copy_n(rhs.extents_,int_<NumDims>(),&extents_[0]);
+    unroll_copy_n(rhs.strides_,int_<NumDims>(),&strides_[0]);
+    unroll_copy_n(rhs.index_base_,int_<NumDims>(),&index_base_[0]);
   }
 
   // const_sub_array always returns const types, regardless of its own
@@ -183,14 +187,16 @@ public:  // Should be protected
                  const size_type* extents,
                  const index* strides,
                  const index* index_base) :
-    base_(base), extents_(extents), strides_(strides),
-    index_base_(index_base) {
+    base_(base) {
+    unroll_copy_n(extents,int_<NumDims>(),&extents_[0]);
+    unroll_copy_n(strides,int_<NumDims>(),&strides_[0]);
+    unroll_copy_n(index_base,int_<NumDims>(),&index_base_[0]);
   }
 
   TPtr base_;
-  const size_type* extents_;
-  const index* strides_;
-  const index* index_base_;
+  size_type extents_[NumDims];
+  index strides_[NumDims];
+  index index_base_[NumDims];
 private:
   // const_sub_array cannot be assigned to (no deep copies!)
   const_sub_array& operator=(const const_sub_array&);

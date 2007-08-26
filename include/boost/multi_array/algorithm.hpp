@@ -41,10 +41,12 @@
 
 
 #include "boost/iterator.hpp"
+#include "boost/mpl/int.hpp"
 
 namespace boost {
 namespace detail {
 namespace multi_array {
+  using ::boost::mpl::int_;
 //--------------------------------------------------
 // copy_n (not part of the C++ standard)
 #if 1
@@ -96,6 +98,26 @@ copy_n(InputIter first, Size count, OutputIter result) {
 }
 
 #endif // 1
+
+template <class InputIter, int N, class OutputIter>
+void unroll_copy_n(InputIter first, int_<N>,
+                  OutputIter result) {
+  *result = *first;
+  unroll_copy_n(++first,int_<N-1>(),++result);
+}
+
+template <class InputIter,class OutputIter>
+void
+unroll_copy_n(InputIter first, int_<1>, OutputIter result) {
+  *result = *first;
+}
+
+template <class InputIter,class OutputIter>
+void
+unroll_copy_n(InputIter first, int_<0>, OutputIter result) {
+}
+
+
 } // namespace multi_array
 } // namespace detail
 } // namespace boost
