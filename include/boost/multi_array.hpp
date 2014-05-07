@@ -10,6 +10,9 @@
 //           Andrew Lumsdaine
 //  See http://www.boost.org/libs/multi_array for documentation.
 
+// Copyright 2014 Glen Fernandes // C++11 allocator model support
+// glenfe at live dot com
+
 #ifndef BOOST_MULTI_ARRAY_RG071801_HPP
 #define BOOST_MULTI_ARRAY_RG071801_HPP
 
@@ -30,6 +33,7 @@
 #include "boost/multi_array/subarray.hpp"
 #include "boost/multi_array/multi_array_ref.hpp"
 #include "boost/multi_array/algorithm.hpp"
+#include "boost/multi_array/allocator_fill.hpp"
 #include "boost/array.hpp"
 #include "boost/container/allocator_traits.hpp"
 #include "boost/mpl/if.hpp"
@@ -518,7 +522,8 @@ private:
     base_ = alloc.allocate(this->num_elements());
     this->set_base_ptr(base_);
     allocated_elements_ = this->num_elements();
-    std::uninitialized_fill_n(base_,allocated_elements_,T());
+    boost::detail::multi_array::allocator_fill(alloc, base_,
+      allocated_elements_);
   }
 
   void deallocate_space() {
