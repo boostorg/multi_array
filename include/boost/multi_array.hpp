@@ -31,11 +31,13 @@
 #include "boost/multi_array/multi_array_ref.hpp"
 #include "boost/multi_array/algorithm.hpp"
 #include "boost/array.hpp"
+#include "boost/container/allocator_traits.hpp"
 #include "boost/mpl/if.hpp"
 #include "boost/type_traits.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include <numeric>
 #include <vector>
 
@@ -114,6 +116,7 @@ struct disable_multi_array_impl<int>
 template<typename T, std::size_t NumDims,
   typename Allocator>
 class multi_array :
+  private Allocator,
   public multi_array_ref<T,NumDims>
 {
   typedef multi_array_ref<T,NumDims> super_type;
@@ -142,7 +145,8 @@ public:
     typedef boost::detail::multi_array::multi_array_view<T,NDims> type;
   };
 
-  explicit multi_array() :
+  explicit multi_array(const Allocator& alloc = Allocator()) :
+    Allocator(alloc),
     super_type((T*)initial_base_,c_storage_order(),
                /*index_bases=*/0, /*extents=*/0) {
     allocate_space(); 
@@ -150,68 +154,55 @@ public:
 
   template <class ExtentList>
   explicit multi_array(
-      ExtentList const& extents
+      ExtentList const& extents,
+      const Allocator& alloc = Allocator()
 #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
       , typename mpl::if_<
       detail::multi_array::is_multi_array_impl<ExtentList>,
       int&,int>::type* = 0
 #endif
       ) :
+    Allocator(alloc),
     super_type((T*)initial_base_,extents) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
     allocate_space();
   }
 
-    
   template <class ExtentList>
   explicit multi_array(ExtentList const& extents,
-                       const general_storage_order<NumDims>& so) :
+                       const general_storage_order<NumDims>& so,
+                       Allocator const& alloc = Allocator()) :
+    Allocator(alloc),
     super_type((T*)initial_base_,extents,so) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
     allocate_space();
   }
 
-  template <class ExtentList>
-  explicit multi_array(ExtentList const& extents,
-                       const general_storage_order<NumDims>& so,
-                       Allocator const& alloc) :
-    super_type((T*)initial_base_,extents,so), allocator_(alloc) {
-    boost::function_requires<
-      detail::multi_array::CollectionConcept<ExtentList> >();
-    allocate_space();
-  }
-
 
   explicit multi_array(const detail::multi_array
-                       ::extent_gen<NumDims>& ranges) :
+                       ::extent_gen<NumDims>& ranges,
+                       const Allocator& alloc = Allocator()) :
+    Allocator(alloc),
     super_type((T*)initial_base_,ranges) {
 
     allocate_space();
   }
 
-
   explicit multi_array(const detail::multi_array
                        ::extent_gen<NumDims>& ranges,
-                       const general_storage_order<NumDims>& so) :
+                       const general_storage_order<NumDims>& so,
+                       Allocator const& alloc = Allocator()) :
+    Allocator(alloc),
     super_type((T*)initial_base_,ranges,so) {
 
     allocate_space();
   }
 
-
-  explicit multi_array(const detail::multi_array
-                       ::extent_gen<NumDims>& ranges,
-                       const general_storage_order<NumDims>& so,
-                       Allocator const& alloc) :
-    super_type((T*)initial_base_,ranges,so), allocator_(alloc) {
-
-    allocate_space();
-  }
-
   multi_array(const multi_array& rhs) :
-  super_type(rhs), allocator_(rhs.allocator_) {
+  Allocator(static_cast<const Allocator&>(rhs)),
+  super_type(rhs) {
     allocate_space();
     boost::detail::multi_array::copy_n(rhs.base_,rhs.num_elements(),base_);
   }
@@ -228,8 +219,10 @@ public:
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename OPtr>
   multi_array(const const_multi_array_ref<T,NumDims,OPtr>& rhs,
-              const general_storage_order<NumDims>& so = c_storage_order())
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so = c_storage_order(),
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     // Warning! storage order may change, hence the following copy technique.
@@ -239,8 +232,10 @@ public:
   template <typename OPtr>
   multi_array(const detail::multi_array::
               const_sub_array<T,NumDims,OPtr>& rhs,
-              const general_storage_order<NumDims>& so = c_storage_order())
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so = c_storage_order(),
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -250,8 +245,10 @@ public:
   template <typename OPtr>
   multi_array(const detail::multi_array::
               const_multi_array_view<T,NumDims,OPtr>& rhs,
-              const general_storage_order<NumDims>& so = c_storage_order())
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so = c_storage_order(),
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so,rhs. index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -261,8 +258,10 @@ public:
   // More limited support for MSVC
 
 
-  multi_array(const const_multi_array_ref<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+  multi_array(const const_multi_array_ref<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     // Warning! storage order may change, hence the following copy technique.
@@ -270,8 +269,10 @@ public:
   }
 
   multi_array(const const_multi_array_ref<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     // Warning! storage order may change, hence the following copy technique.
@@ -279,8 +280,10 @@ public:
   }
 
   multi_array(const detail::multi_array::
-              const_sub_array<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+              const_sub_array<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -288,8 +291,10 @@ public:
 
   multi_array(const detail::multi_array::
               const_sub_array<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -297,8 +302,10 @@ public:
 
 
   multi_array(const detail::multi_array::
-              const_multi_array_view<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+              const_multi_array_view<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -306,8 +313,10 @@ public:
 
   multi_array(const detail::multi_array::
               const_multi_array_view<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -316,8 +325,10 @@ public:
 #endif // !BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
   // Thes constructors are necessary because of more exact template matches.
-  multi_array(const multi_array_ref<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+  multi_array(const multi_array_ref<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     // Warning! storage order may change, hence the following copy technique.
@@ -325,8 +336,10 @@ public:
   }
 
   multi_array(const multi_array_ref<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     // Warning! storage order may change, hence the following copy technique.
@@ -335,8 +348,10 @@ public:
 
 
   multi_array(const detail::multi_array::
-              sub_array<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+              sub_array<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -344,8 +359,10 @@ public:
 
   multi_array(const detail::multi_array::
               sub_array<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -353,8 +370,10 @@ public:
 
 
   multi_array(const detail::multi_array::
-              multi_array_view<T,NumDims>& rhs)
-    : super_type(0,c_storage_order(),rhs.index_bases(),rhs.shape()) 
+              multi_array_view<T,NumDims>& rhs,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, c_storage_order(), rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -362,8 +381,10 @@ public:
     
   multi_array(const detail::multi_array::
               multi_array_view<T,NumDims>& rhs,
-              const general_storage_order<NumDims>& so)
-    : super_type(0,so,rhs.index_bases(),rhs.shape()) 
+              const general_storage_order<NumDims>& so,
+              const Allocator& alloc = Allocator())
+    : Allocator(alloc),
+      super_type(0, so, rhs.index_bases(), rhs.shape())
   {
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
@@ -373,13 +394,15 @@ public:
   // contains all the necessary code.
   template <typename ConstMultiArray>
   multi_array& operator=(const ConstMultiArray& other) {
-    super_type::operator=(other);
+    Allocator::operator=(static_cast<const Allocator&>(other));
+    super_type::operator=(static_cast<const super_type&>(other));
     return *this;
   }
 
   multi_array& operator=(const multi_array& other) {
     if (&other != this) {
-      super_type::operator=(other);
+      Allocator::operator=(static_cast<const Allocator&>(other));
+      super_type::operator=(static_cast<const super_type&>(other));
     }
     return *this;
   }
@@ -408,7 +431,8 @@ public:
 
 
     // build a multi_array with the specs given
-    multi_array new_array(ranges,this->storage_order());
+    multi_array new_array(ranges, this->storage_order(),
+      static_cast<const Allocator&>(*this));
 
 
     // build a view of tmp with the minimum extents
@@ -461,7 +485,6 @@ public:
     swap(this->origin_offset_,new_array.origin_offset_);
     swap(this->directional_offset_,new_array.directional_offset_);
     swap(this->num_elements_,new_array.num_elements_);
-    swap(this->allocator_,new_array.allocator_);
     swap(this->base_,new_array.base_);
     swap(this->allocated_elements_,new_array.allocated_elements_);
 
@@ -473,10 +496,26 @@ public:
     deallocate_space();
   }
 
+  bool operator==(const
+    multi_array<T, NumDims, Allocator>& rhs) const {
+    return static_cast<const Allocator&>(*this) ==
+      static_cast<const Allocator&>(rhs) &&
+      static_cast<const super_type&>(*this) ==
+      static_cast<const super_type&>(rhs);
+  }
+
+  bool operator!=(const
+    multi_array<T, NumDims, Allocator>& rhs) const {
+    return static_cast<const Allocator&>(*this) !=
+      static_cast<const Allocator&>(rhs) ||
+      static_cast<const super_type&>(*this) !=
+      static_cast<const super_type&>(rhs);
+  }
+
 private:
   void allocate_space() {
-    typename Allocator::const_pointer no_hint=0;
-    base_ = allocator_.allocate(this->num_elements(),no_hint);
+    Allocator& alloc = static_cast<Allocator&>(*this);
+    base_ = alloc.allocate(this->num_elements());
     this->set_base_ptr(base_);
     allocated_elements_ = this->num_elements();
     std::uninitialized_fill_n(base_,allocated_elements_,T());
@@ -484,16 +523,16 @@ private:
 
   void deallocate_space() {
     if(base_) {
+      Allocator& alloc = static_cast<Allocator&>(*this);
       for(T* i = base_; i != base_+allocated_elements_; ++i)
-        allocator_.destroy(i);
-      allocator_.deallocate(base_,allocated_elements_);
+        boost::container::allocator_traits<Allocator>::destroy(alloc, i);
+      alloc.deallocate(base_,allocated_elements_);
     }
   }
 
   typedef boost::array<size_type,NumDims> size_list;
   typedef boost::array<index,NumDims> index_list;
 
-  Allocator allocator_;
   T* base_;
   size_type allocated_elements_;
   enum {initial_base_ = 0};
