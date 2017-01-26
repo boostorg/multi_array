@@ -185,9 +185,9 @@ namespace detail {
     typedef typename Array::reverse_iterator reverse_iterator;
     typedef typename Array::const_reverse_iterator const_reverse_iterator;
     typedef typename Array::element element;
-    typedef typename Array::index index;
+    // typedef typename Array::index index;   warning: unused typedef 'index' [-Wunused-local-typedef]
     typedef typename Array::index_gen index_gen;
-    typedef typename Array::index_range index_range;
+    // typedef typename Array::index_range index_range;  warning: unused typedef 'index_range' [-Wunused-local-typedef]
     typedef typename Array::extent_gen extent_gen;
     typedef typename Array::extent_range extent_range;
 
