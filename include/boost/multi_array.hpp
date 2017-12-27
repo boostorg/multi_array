@@ -474,9 +474,17 @@ public:
   }
 
 private:
+#ifndef BOOST_NO_CXX11_ALLOCATOR
+  typedef std::allocator_traits<Allocator> allocator_traits;
+#endif
+
   void allocate_space() {
+#ifdef BOOST_NO_CXX11_ALLOCATOR
     typename Allocator::const_pointer no_hint=0;
     base_ = allocator_.allocate(this->num_elements(),no_hint);
+#else
+    base_ = allocator_traits::allocate(allocator_,this->num_elements(),nullptr);
+#endif
     this->set_base_ptr(base_);
     allocated_elements_ = this->num_elements();
     std::uninitialized_fill_n(base_,allocated_elements_,T());
@@ -484,9 +492,15 @@ private:
 
   void deallocate_space() {
     if(base_) {
+#ifdef BOOST_NO_CXX11_ALLOCATOR
       for(T* i = base_; i != base_+allocated_elements_; ++i)
         allocator_.destroy(i);
       allocator_.deallocate(base_,allocated_elements_);
+#else
+      for(T* i = base_; i != base_+allocated_elements_; ++i)
+        allocator_traits::destroy(allocator_,i);
+      allocator_traits::deallocate(allocator_,base_,allocated_elements_);
+#endif
     }
   }
 
