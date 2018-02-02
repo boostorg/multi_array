@@ -33,6 +33,7 @@ test_main(int,char*[])
     BOOST_CHECK(r1.start() == -3);
     BOOST_CHECK(r1.finish() == 5);
     BOOST_CHECK(r1.stride() == 1);
+    BOOST_CHECK(r1.size(0) == 8);
     BOOST_CHECK(!r1.is_degenerate());
     BOOST_CHECK(r1.get_start(0) == -3);
     BOOST_CHECK(r1.get_finish(100) == 5);
@@ -43,6 +44,7 @@ test_main(int,char*[])
     BOOST_CHECK(r2.start() == -3);
     BOOST_CHECK(r2.finish() == 5);
     BOOST_CHECK(r2.stride() == 2);
+    BOOST_CHECK(r2.size(0) == 4);
     BOOST_CHECK(!r2.is_degenerate());
   }
 
@@ -52,6 +54,7 @@ test_main(int,char*[])
     BOOST_CHECK(r3.start() == 5);
     BOOST_CHECK(r3.finish() == 6);
     BOOST_CHECK(r3.stride() == 1);
+    BOOST_CHECK(r3.size(0) == 1);
     BOOST_CHECK(r3.is_degenerate());
   }
 
@@ -61,6 +64,7 @@ test_main(int,char*[])
     BOOST_CHECK(r4.get_start(0) == 0);
     BOOST_CHECK(r4.get_finish(100) == 100);
     BOOST_CHECK(r4.stride() == 1);
+    BOOST_CHECK(r4.size(0) == 0);
   }
 
   {
@@ -69,6 +73,7 @@ test_main(int,char*[])
     BOOST_CHECK(r5.start() == -3);
     BOOST_CHECK(r5.stride() == 2);
     BOOST_CHECK(r5.finish() == 7);
+    BOOST_CHECK(r5.size(0) == 5);
   }
 
   // try out all the comparison operators
@@ -77,6 +82,7 @@ test_main(int,char*[])
     BOOST_CHECK(r6.start() == -3);
     BOOST_CHECK(r6.stride() == 2);
     BOOST_CHECK(r6.finish() == 7);
+    BOOST_CHECK(r6.size(0) == 5);
   }
 
   {
@@ -84,6 +90,7 @@ test_main(int,char*[])
     BOOST_CHECK(r7.start() == -2);
     BOOST_CHECK(r7.stride() == 1);
     BOOST_CHECK(r7.finish() == 8);
+    BOOST_CHECK(r7.size(0) == 10);
   }
 
   // arithmetic operators
@@ -92,6 +99,7 @@ test_main(int,char*[])
     BOOST_CHECK(r8.start() == 2);
     BOOST_CHECK(r8.stride() == 1);
     BOOST_CHECK(r8.finish() == 7);
+    BOOST_CHECK(r8.size(0) == 5);
   }
 
   {
@@ -99,6 +107,7 @@ test_main(int,char*[])
     BOOST_CHECK(r9.start() == -2);
     BOOST_CHECK(r9.stride() == 1);
     BOOST_CHECK(r9.finish() == 3);
+    BOOST_CHECK(r9.size(0) == 5);
   }
 
   return boost::exit_success;
