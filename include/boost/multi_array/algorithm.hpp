@@ -39,8 +39,7 @@
 //           Andrew Lumsdaine
 //  See http://www.boost.org/libs/multi_array for documentation.
 
-
-#include "boost/iterator.hpp"
+#include <boost/iterator.hpp>
 
 namespace boost { namespace detail { namespace multi_array {
 

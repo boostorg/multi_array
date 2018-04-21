@@ -27,6 +27,7 @@ install:
   - git submodule update --init libs/config
   - git submodule update --init tools/boostdep
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% libs\multi_array
+  - python tools/boostdep/depinst/depinst.py multi_array
   - bootstrap
   - b2 headers
 
