@@ -21,6 +21,7 @@
 #include <boost/cstdlib.hpp>
 #include <boost/array.hpp>
 #include <boost/core/lightweight_test.hpp>
+#include <boost/config/workaround.hpp>
 
 int main(int, char*[])
 {
@@ -33,6 +34,9 @@ int main(int, char*[])
     typedef array::subarray<ndims>::type subarray;
     typedef array::const_subarray<ndims>::type const_subarray;
 
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1600)
+    // MSVC 9.0 currently ICEs on these.
+#else
     BOOST_CONCEPT_ASSERT((
         boost::multi_array_concepts::ConstMultiArrayConcept<array,ndims>
     ));
@@ -79,6 +83,7 @@ int main(int, char*[])
     BOOST_CONCEPT_ASSERT((
         boost::multi_array_concepts::MutableMultiArrayConcept<subarray,ndims>
     ));
+#endif // MSVC 9.0
 
     return boost::report_errors();
 }
