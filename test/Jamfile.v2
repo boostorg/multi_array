@@ -4,6 +4,11 @@
 # "as is" without express or implied warranty, and with no claim as
 # to its suitability for any purpose.
 
+project boost/multi_array
+    :
+        default-build <warnings>off
+    ;
+
 test-suite multi_array
     : 
         [ compile-fail fail_cbracket.cpp ]
