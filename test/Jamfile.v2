@@ -6,11 +6,12 @@
 
 project boost/multi_array
     :
-        default-build <warnings>off
+        default-build
+        <warnings>off
     ;
 
-test-suite multi_array
-    : 
+alias multi_array
+    :
         [ compile-fail fail_cbracket.cpp ]
         [ compile-fail fail_cdata.cpp ]
         [ compile-fail fail_citerator.cpp ]
@@ -51,6 +52,8 @@ test-suite multi_array
         [ run resize.cpp ]
         [ run assert.cpp ]
         [ run reverse_view.cpp ]
+        [ run allocators.cpp ]
 
         [ compile concept_checks.cpp ]
     ;
+
