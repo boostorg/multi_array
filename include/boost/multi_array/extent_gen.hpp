@@ -1,7 +1,7 @@
 // Copyright 2002 The Trustees of Indiana University.
 
-// Use, modification and distribution is subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  Boost.MultiArray Library
@@ -13,63 +13,68 @@
 #ifndef BOOST_EXTENT_GEN_RG071801_HPP
 #define BOOST_EXTENT_GEN_RG071801_HPP
 
-#include "boost/multi_array/extent_range.hpp"
-#include "boost/multi_array/range_list.hpp"
-#include "boost/multi_array/types.hpp"
-#include "boost/array.hpp"
+#include <boost/multi_array/extent_range.hpp>
+#include <boost/multi_array/range_list.hpp>
+#include <boost/multi_array/types.hpp>
+#include <boost/array.hpp>
 #include <algorithm>
 
-namespace boost {
-namespace detail {
-namespace multi_array {
+namespace boost { namespace detail { namespace multi_array {
 
+    template <std::size_t NumRanges>
+    class extent_gen
+    {
+     public:
+        typedef boost::detail::multi_array::index index;
+        typedef boost::detail::multi_array::size_type size_type;
+        typedef extent_range<index,size_type> range;
 
-template <std::size_t NumRanges>
-class extent_gen {
-public:
-  typedef boost::detail::multi_array::index index;
-  typedef boost::detail::multi_array::size_type size_type;
-  typedef extent_range<index,size_type> range;
-private:
-  typedef typename range_list_generator<range,NumRanges>::type range_list;
-public:
-  template <std::size_t Ranges>
-  struct gen_type {
-    typedef extent_gen<Ranges> type;
-  };
+     private:
+        typedef typename range_list_generator<
+            range
+          , NumRanges
+        >::type range_list;
 
-  range_list ranges_;
+     public:
+        template <std::size_t Ranges>
+        struct gen_type
+        {
+            typedef extent_gen<Ranges> type;
+        };
 
-  extent_gen() { }
+        range_list ranges_;
 
-  // Used by operator[] to expand extent_gens
-  extent_gen(const extent_gen<NumRanges-1>& rhs,
-            const range& a_range)
-  {
-    std::copy(rhs.ranges_.begin(),rhs.ranges_.end(),ranges_.begin());
-    *ranges_.rbegin() = a_range;
-  }
+        extent_gen()
+        {
+        }
 
-  extent_gen<NumRanges+1>
-  operator[](const range& a_range)
-  {
-    return extent_gen<NumRanges+1>(*this,a_range);    
-  }
+        // Used by operator[] to expand extent_gens
+        extent_gen(extent_gen<NumRanges-1> const& rhs, range const& a_range)
+        {
+            std::copy(
+                rhs.ranges_.begin()
+              , rhs.ranges_.end()
+              , this->ranges_.begin()
+            );
+            *this->ranges_.rbegin() = a_range;
+        }
 
-  extent_gen<NumRanges+1>
-  operator[](index idx)
-  {
-    return extent_gen<NumRanges+1>(*this,range(0,idx));    
-  }    
+        extent_gen<NumRanges+1> operator[](range const& a_range)
+        {
+            return extent_gen<NumRanges+1>(*this, a_range);
+        }
 
-  static extent_gen<0> extents() {
-    return extent_gen<0>();
-  }
-};
+        extent_gen<NumRanges+1> operator[](index idx)
+        {
+            return extent_gen<NumRanges+1>(*this, range(0, idx));
+        }
 
-} // namespace multi_array
-} // namespace detail
-} // namespace boost
-
+        static extent_gen<0> extents()
+        {
+            return extent_gen<0>();
+        }
+    };
+}}} // namespace boost::detail::multi_array
 
 #endif // BOOST_EXTENT_GEN_RG071801_HPP
+
