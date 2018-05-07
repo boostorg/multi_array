@@ -198,7 +198,7 @@ namespace boost {
             this->allocate_space();
         }
 
-        explicit multi_array(
+        multi_array(
             boost::detail::multi_array::extent_gen<NumDims> const& ranges
           , Allocator const& alloc = Allocator()
         ) : Allocator(alloc), super_type((T*)initial_base_, ranges)
