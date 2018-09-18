@@ -1,4 +1,4 @@
-# Copyright 2018 Edward Diener
+# Copyright 2018 Cromwell D. Enage
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://boost.org/LICENSE_1_0.txt)
@@ -9,8 +9,8 @@ shallow_clone: true
 
 branches:
   only:
-    - lightweight_test
-    - index_range_size
+    - master
+    - develop
 
 platform:
   - x64
