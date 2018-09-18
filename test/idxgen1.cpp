@@ -11,7 +11,7 @@
 //  See http://www.boost.org/libs/multi_array for documentation.
 
 //
-// idxgen1.cpp - testing the code for index_gen
+// idxset1.cpp - testing the code for index_gen
 //
 
 #include <boost/multi_array/index_gen.hpp>
