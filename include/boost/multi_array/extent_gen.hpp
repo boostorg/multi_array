@@ -37,8 +37,7 @@ namespace boost { namespace detail { namespace multi_array {
 
      public:
         template <std::size_t Ranges>
-        struct gen_type
-        {
+        struct gen_type {
             typedef extent_gen<Ranges> type;
         };
 
@@ -66,7 +65,7 @@ namespace boost { namespace detail { namespace multi_array {
 
         extent_gen<NumRanges+1> operator[](index idx)
         {
-            return extent_gen<NumRanges+1>(*this, range(0, idx));
+            return extent_gen<NumRanges+1>(*this,range(0,idx));
         }
 
         static extent_gen<0> extents()
