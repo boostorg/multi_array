@@ -29,6 +29,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r1.start(), -3);
         BOOST_TEST_EQ(r1.finish(), 5);
         BOOST_TEST_EQ(r1.stride(), 1);
+        BOOST_TEST_EQ(r1.size(0), 8);
         BOOST_TEST(!r1.is_degenerate());
         BOOST_TEST_EQ(r1.get_start(0), -3);
         BOOST_TEST_EQ(r1.get_finish(100), 5);
@@ -39,6 +40,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r2.start(), -3);
         BOOST_TEST_EQ(r2.finish(), 5);
         BOOST_TEST_EQ(r2.stride(), 2);
+        BOOST_TEST_EQ(r2.size(0), 4);
         BOOST_TEST(!r2.is_degenerate());
     }
 
@@ -48,6 +50,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r3.start(), 5);
         BOOST_TEST_EQ(r3.finish(), 6);
         BOOST_TEST_EQ(r3.stride(), 1);
+        BOOST_TEST_EQ(r3.size(0), 1);
         BOOST_TEST(r3.is_degenerate());
     }
 
@@ -57,6 +60,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r4.get_start(0), 0);
         BOOST_TEST_EQ(r4.get_finish(100), 100);
         BOOST_TEST_EQ(r4.stride(), 1);
+        BOOST_TEST_EQ(r4.size(0), 0);
     }
 
     {
@@ -65,6 +69,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r5.start(), -3);
         BOOST_TEST_EQ(r5.stride(), 2);
         BOOST_TEST_EQ(r5.finish(), 7);
+        BOOST_TEST_EQ(r5.size(0), 5);
     }
 
     // try out all the comparison operators
@@ -73,6 +78,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r6.start(), -3);
         BOOST_TEST_EQ(r6.stride(), 2);
         BOOST_TEST_EQ(r6.finish(), 7);
+        BOOST_TEST_EQ(r6.size(0), 5);
     }
 
     {
@@ -80,6 +86,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r7.start(), -2);
         BOOST_TEST_EQ(r7.stride(), 1);
         BOOST_TEST_EQ(r7.finish(), 8);
+        BOOST_TEST_EQ(r7.size(0), 10);
     }
 
     // arithmetic operators
@@ -88,6 +95,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r8.start(), 2);
         BOOST_TEST_EQ(r8.stride(), 1);
         BOOST_TEST_EQ(r8.finish(), 7);
+        BOOST_TEST_EQ(r8.size(0), 5);
     }
 
     {
@@ -95,6 +103,7 @@ int main(int, char*[])
         BOOST_TEST_EQ(r9.start(), -2);
         BOOST_TEST_EQ(r9.stride(), 1);
         BOOST_TEST_EQ(r9.finish(), 3);
+        BOOST_TEST_EQ(r9.size(0), 5);
     }
 
     return boost::report_errors();
