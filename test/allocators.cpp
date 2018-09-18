@@ -71,7 +71,7 @@ class minimal
 #endif
 
     template <typename U>
-    minimal(minimal<U> const&)
+    minimal(minimal<T> const&)
     {
     }
 
