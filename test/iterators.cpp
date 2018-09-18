@@ -175,7 +175,7 @@ unsigned int test_iterators(Array& A, IterTraits const&)
         typedef typename IterTraits::riterator3 riterator3;
         typedef typename IterTraits::riterator2 riterator2;
         typedef typename IterTraits::riterator1 riterator1;
-        int check_iter_val = A.num_elements() - 1;
+        unsigned long check_iter_val = A.num_elements() - 1;
 
         for (riterator3 i = A.rbegin(); i != (riterator3)A.rend(); ++i)
         {

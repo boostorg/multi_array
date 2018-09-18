@@ -101,7 +101,7 @@ bool operator!=(minimal<T1> const& a, minimal<T2> const& b)
 }
 #endif // BOOST_NO_CXX11_ALLOCATOR
 
-void check_shape(double const&, std::size_t*, int*, unsigned int)
+void check_shape(double const&, std::size_t*, int*, unsigned long)
 {
 }
 
@@ -111,7 +111,7 @@ void
         T const& data
       , std::size_t* sizes
       , int* strides
-      , unsigned int elements
+      , unsigned long elements
     )
 {
     BOOST_TEST(data.num_elements() == elements);
