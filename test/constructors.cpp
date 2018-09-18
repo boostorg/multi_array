@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <list>
 
-void check_shape(double const&, std::size_t*, int*, unsigned int)
+void check_shape(double const&, std::size_t*, int*, unsigned long)
 {
 }
 
@@ -29,7 +29,7 @@ void
         Array const& A
       , std::size_t* sizes
       , int* strides
-      , unsigned int num_elements
+      , unsigned long num_elements
     )
 {
     BOOST_TEST_EQ(A.num_elements(), num_elements);
