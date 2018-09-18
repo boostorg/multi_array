@@ -9,6 +9,8 @@ shallow_clone: true
 
 branches:
   only:
+    - master
+    - develop
     - lightweight_test
     - index_range_size
 
