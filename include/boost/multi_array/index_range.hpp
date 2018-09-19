@@ -1,7 +1,7 @@
 // Copyright 2002 The Trustees of Indiana University.
 
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
+// Use, modification and distribution is subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  Boost.MultiArray Library
@@ -14,8 +14,8 @@
 #define BOOST_INDEX_RANGE_RG071801_HPP
 
 #include <boost/config.hpp>
-#include <boost/limits.hpp>
 #include <utility>
+#include <boost/limits.hpp>
 
 // For representing intervals, also with stride.
 // A degenerate range is a range with one element.
@@ -64,13 +64,11 @@ namespace boost { namespace detail { namespace multi_array {
             this->degenerate_ = true;
         }
 
-        index_range(index start, index finish, index stride = 1)
-          : start_(start)
-          , finish_(finish)
-          , stride_(stride)
-          , degenerate_(false)
+        explicit index_range(index start, index finish, index stride = 1)
+          : start_(start), finish_(finish), stride_(stride), degenerate_(false)
         {
         }
+
 
         // These are for chaining assignments to an index_range
         index_range& start(index s)
@@ -221,6 +219,7 @@ namespace boost { namespace detail { namespace multi_array {
     {
         return index_range<Index,SizeType>(r.start(), f + 1, r.stride());
     }
+
 }}} // namespace boost::detail::multi_array
 
 #endif // BOOST_INDEX_RANGE_RG071801_HPP
