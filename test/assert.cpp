@@ -1,7 +1,7 @@
 // Copyright 2007 The Trustees of Indiana University.
 
-// Use, modification and distribution is subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  Boost.MultiArray Library
@@ -15,45 +15,56 @@
 // with exceptions
 //
 
-#include "boost/test/minimal.hpp"
-
 #define BOOST_ENABLE_ASSERT_HANDLER
-#include "boost/multi_array.hpp" // includes assert.hpp
-
+#include <boost/multi_array.hpp> // includes assert.hpp
+#include <boost/core/lightweight_test.hpp>
 #include <stdexcept>
 
 namespace boost {
 
-  void assertion_failed(char const* expr, char const* function,
-                        char const* file, long line) {
-    throw std::runtime_error(expr);
-  }
+    void
+        assertion_failed(
+            char const* expr
+          , char const* function
+          , char const* file
+          , long line
+        )
+    {
+        throw std::runtime_error(expr);
+    }
 
-  void assertion_failed_msg(char const * expr, char const * msg,
-                            char const * function,
-                            char const * file, long line) {
-    throw std::runtime_error(msg);
-  }
-
+    void
+        assertion_failed_msg(
+            char const* expr
+          , char const* msg
+          , char const* function
+          , char const* file
+          , long line
+        )
+    {
+        throw std::runtime_error(msg);
+    }
 } // namespace boost
 
 using namespace boost;
 
-int
-test_main(int,char*[]) {
+int main(int, char*[])
+{
+    typedef boost::multi_array<int,2> array_t;
 
-  typedef multi_array<int,2> array_t;
+    array_t A(boost::extents[2][2]);
+    array_t B(boost::extents[3][3]);
 
-  array_t A(extents[2][2]);
+    try
+    {
+        A = B;
+        BOOST_ERROR("did not throw an exception");
+    }
+    catch (std::runtime_error&)
+    {
+        //...all good
+    }
 
-  array_t B(extents[3][3]);
-
-  try {
-    A = B;
-    BOOST_ERROR("did not throw an exception");
-  } catch (std::runtime_error&) {
-    //...all good
-  }
-
-  return boost::exit_success;
+    return boost::report_errors();
 }
+
