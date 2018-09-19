@@ -7,8 +7,6 @@ language: cpp
 
 sudo: false
 
-python: "2.7"
-
 os:
   - linux
   - osx
@@ -26,7 +24,6 @@ install:
   - git submodule update --init libs/config
   - git submodule update --init tools/boostdep
   - cp -r $TRAVIS_BUILD_DIR/* libs/multi_array
-  - python tools/boostdep/depinst/depinst.py parameter
   - ./bootstrap.sh
   - ./b2 headers
 
