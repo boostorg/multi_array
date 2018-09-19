@@ -1,11 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <!--
   == Copyright 2002 The Trustees of Indiana University.
 
-  == Use, modification and distribution is subject to the Boost Software 
-  == License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  == Distributed under the Boost Software License, Version 1.0.
+  == (See accompanying file LICENSE_1_0.txt or copy at
   == http://www.boost.org/LICENSE_1_0.txt)
 
   ==  Boost.MultiArray Library
@@ -15,7 +16,9 @@
   ==  See http://www.boost.org/libs/multi_array for documentation.
   -->
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>The Boost Multidimensional Array Library (Boost.MultiArray)</title>
+<link rel="stylesheet" href="multi_array.css" type="text/css" />
 </head>
 
 <body>
@@ -611,24 +614,20 @@ cases can be found <a href="./test_cases.html">here</a>.
 <a name="sec_related"></a>
 <h2>Related Work</h2>
 
-<a href="../../array/index.html">boost::array</a>
- and <a href="http://www.sgi.com/tech/stl/Vector.html">std::vector</a> are
-    one-dimensional containers of user data.  Both manage their own
-    memory. <tt>std::valarray</tt> is a low-level 
-    C++ Standard Library component
-    meant to provide portable high performance for numerical applications.
-<a href="http://www.oonumerics.org/blitz/">Blitz++</a> is 
-    an array library developed by Todd
-    Veldhuizen. It uses
-    advanced C++ techniques to provide near-Fortran performance for
-    array-based numerical applications.
-    <b>array_traits</b> is a beta library, formerly distributed with
-    Boost, that provides a means to create iterators over native C++
-    arrays.
-
-This library is analogous to 
-<a href="../../array/index.html">boost::array</a> in that it augments C style N-dimensional
-arrays, as <tt>boost::array</tt> does for C one-dimensional arrays.
+<p><a href="../../../doc/html/array.html">boost::array</a> and
+<a href="http://en.cppreference.com/w/cpp/container/vector">std::vector</a>
+are one-dimensional containers of user data.  Both manage their own
+memory.  <a href="http://en.cppreference.com/w/cpp/numeric/valarray"><tt
+>std::valarray</tt></a> is a low-level C++ Standard Library component meant to
+provide portable high performance for numerical applications.</p>
+<p><a href="http://www.oonumerics.org/blitz/">Blitz++</a> is an array library
+developed by Todd Veldhuizen.  It uses advanced C++ techniques to provide
+near-Fortran performance for array-based numerical applications.</p>
+<p><b>array_traits</b> is a beta library, formerly distributed with Boost,
+that provides a means to create iterators over native C++ arrays.</p>
+<p>This library is analogous to <a href="../../../doc/html/array.html"
+>boost::array</a> in that it augments C style N-dimensional arrays, as
+<tt>boost::array</tt> does for C one-dimensional arrays.</p>
 
 
 <a name="sec_credits"></a>
