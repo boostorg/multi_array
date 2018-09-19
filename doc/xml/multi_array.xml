@@ -74,7 +74,8 @@ public:
   explicit multi_array(const extents_tuple& ranges,
                        const storage_order_type& store = c_storage_order(),
 	               const Allocator& alloc = Allocator());
-  multi_array(const multi_array& x);
+  multi_array(const multi_array& x,
+              const Allocator& alloc = Allocator());
   multi_array(const const_multi_array_ref<ValueType,NumDims>& x,
               const Allocator& alloc = Allocator());
   multi_array(const const_subarray<NumDims>::type& x,
@@ -212,7 +213,8 @@ elements.
 
 <varlistentry>
 <term><programlisting>
-<![CDATA[multi_array(const multi_array& x);
+<![CDATA[multi_array(const multi_array& x,
+    const Allocator& alloc = Allocator());
 multi_array(const const_multi_array_ref<ValueType,NumDims>& x,
     const Allocator& alloc = Allocator());
 multi_array(const const_subarray<NumDims>::type& x,
