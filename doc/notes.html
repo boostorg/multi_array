@@ -1,76 +1,90 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <!--
-  == Copyright 2002 The Trustees of Indiana University.
+== Copyright 2002 The Trustees of Indiana University.
 
-  == Use, modification and distribution is subject to the Boost Software 
-  == License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-  == http://www.boost.org/LICENSE_1_0.txt)
+== Distributed under the Boost Software License, Version 1.0.
+== (See accompanying file LICENSE_1_0.txt or copy at
+== http://www.boost.org/LICENSE_1_0.txt)
 
-  ==  Boost.MultiArray Library
-  ==  Authors: Ronald Garcia
-  ==           Jeremy Siek
-  ==           Andrew Lumsdaine
-  ==  See http://www.boost.org/libs/multi_array for documentation.
-  -->
+==  Boost.MultiArray Library
+==  Authors: Ronald Garcia
+==           Jeremy Siek
+==           Andrew Lumsdaine
+==  See http://www.boost.org/libs/multi_array for documentation.
+-->
 <head>
-  <title>Boost.MultiArray: Extra Notes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Boost.MultiArray: Extra Notes</title>
+<link rel="stylesheet" href="multi_array.css" type="text/css" />
 </head>
-
 <body>
-
 <h1>
-   <img src="../../../boost.png" alt="boost logo"
-    width="277" align="middle" height="86">
-   <br>Boost.MultiArray: Extra Notes
-   <br>
+<img src="../../../boost.png" alt="C++ Boost"
+width="277" height="86" align="middle" />
+<br />Boost.MultiArray: Extra Notes
 </h1>
-
-
-<a name="sec_compilers"></a>
-<h2>Compiler Support</h2>
-
-Boost.MultiArray was designed with compiler support in mind.
-    Interface compromises were kept to a minimum, but efforts were
-    made to account for C++ Standard compliance issues in compilers
-    that were popular at the time the library was written.  That said, 
-    Boost.MultiArray has been tested with the following compilers:
+<h2><a name="sec_compilers"></a>Compiler Support</h2>
+<p>Boost.MultiArray was designed with compiler support in mind.  Interface
+compromises were kept to a minimum, but efforts were made to account for C++
+Standard compliance issues in compilers that were popular at the time the
+library was written.  That said, Boost.MultiArray has been tested with the
+following compilers:</p>
 <ol>
-<li> Gnu C++ Compiler v2.95.2 (compile with <tt>-ftemplate-depth-50</tt>)
-<li> Gnu C++ Compiler v3.0.2
-<li> Kuck and Associates C++ Compiler v4.0f
-<li> Microsoft Visual C++ v6.0 sp5
-<li> Comeau C++ Compiler v4.2.45 beta 2 (libcomo beta 14)
-<li> Intel C++ Compiler v5.0 (with MS lib v6.0 sp5)
-<li> Metrowerks CodeWarrior C++ Compiler v7.1
+<li>Clang v3.5.0 for Linux</li>
+<li>Clang v3.6.2 for Linux</li>
+<li>Clang v3.7.1 for Linux</li>
+<li>Clang v3.8.0 for Linux</li>
+<li>Clang v3.9.1 for Linux</li>
+<li>Clang v4.0.1 for Linux</li>
+<li>Clang v5.0.2 for Linux</li>
+<li>Clang v6.1.0 for XCode v6.4.0</li>
+<li>Clang v7.3.0 for XCode v7.3.0</li>
+<li>Clang v8.1.0 for XCode v8.3.0</li>
+<li>Gnu C++ Compiler v2.95.2 (compile with <tt>-ftemplate-depth-50</tt>)</li>
+<li>Gnu C++ Compiler v3.0.2</li>
+<li>Gnu C++ Compiler v4.4.7</li>
+<li>Gnu C++ Compiler v4.6.4</li>
+<li>Gnu C++ Compiler v4.7.3</li>
+<li>Gnu C++ Compiler v4.8.5</li>
+<li>Gnu C++ Compiler v4.9.4</li>
+<li>Gnu C++ Compiler v5.4.1</li>
+<li>Gnu C++ Compiler v6.3.0</li>
+<li>Gnu C++ Compiler v7.2.0</li>
+<li>Kuck and Associates C++ Compiler v4.0f</li>
+<li>Microsoft Visual C++ v6.0 sp5</li>
+<li>Microsoft Visual C++ v9.0</li>
+<li>Microsoft Visual C++ v10.0</li>
+<li>Microsoft Visual C++ v11.0</li>
+<li>Microsoft Visual C++ v12.0</li>
+<li>Microsoft Visual C++ v14.0</li>
+<li>Microsoft Visual C++ v14.1</li>
+<li>Minimalist Gnu for Windows v5.3.0</li>
+<li>Minimalist Gnu for Windows v6.3.0</li>
+<li>Comeau C++ Compiler v4.2.45 beta 2 (libcomo beta 14)</li>
+<li>Intel C++ Compiler v5.0 (with MS lib v6.0 sp5)</li>
+<li>Metrowerks CodeWarrior C++ Compiler v7.1</li>
 </ol>
-
-Boost.MultiArray is known to NOT work with Borland C++ v5.5.1. 
-Support for this compiler is forthcoming.
-
-
+<p>Boost.MultiArray is known to NOT work with Borland C++ v5.5.1.  Support for
+this compiler is forthcoming.</p>
 <h2>Future Work</h2>
-
-The following is a list of work that is intended for the near future
- -- following the initial addition of the library to the Boost
-    distribution:
+<p>The following is a list of work that is intended for the near future --
+following the initial addition of the library to the Boost distribution:</p>
 <ol>
-<li> Pursue and document performance issues related to compilers and
-	implementation.
-<li> More comprehensive examples of using the library components.
-<li> Extensive rewrite of the user documentation to make it more accessible.
+<li>Pursue and document performance issues related to compilers and
+implementation.</li>
+<li>More comprehensive examples of using the library components.</li>
+<li>Extensive rewrite of the user documentation to make it more
+accessible.</li>
 </ol>
-
-<hr>
-
-<address>
-<a href="mailto:garcia@.cs.indiana.edu">Ronald Garcia</a>
-</address>
+<hr />
+<p><a href="mailto:garcia@.cs.indiana.edu">Ronald Garcia</a></p>
 <!-- Created: Fri Jun 29 10:53:07 EST 2001 -->
 <!-- hhmts start -->
 Last modified: Wed Jan  8 18:09:46 EST 2003
 <!-- hhmts end -->
-
 </body>
 </html>
+
