@@ -109,11 +109,8 @@ namespace multi_array {
 
     size_type size(index idx) const
     {
-      return (
-        (this->start_ == this_type::from_start()) || (
-          this->finish_ == this_type::to_end()
-        )
-      ) ? idx : ((this->finish_ - this->start_) / this->stride_);
+      return (start_ == from_start() || finish_ == to_end())
+        ? idx : ((finish_ - start_) / stride_);
     }
 
     void set_index_range(index start, index finish, index stride=1)
