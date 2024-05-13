@@ -227,7 +227,7 @@ public: // should be protected
   // to create strides  
   template <typename ExtentList, typename Index>
   explicit const_multi_array_view(TPtr base,
-                           const ExtentList& extents,
+                           const ExtentList& _extents,
                            const boost::array<Index,NumDims>& strides): 
     base_(base), origin_offset_(0) {
 
@@ -235,7 +235,7 @@ public: // should be protected
 
     // Get the extents and strides
     boost::detail::multi_array::
-      copy_n(extents.begin(),NumDims,extent_list_.begin());
+      copy_n(_extents.begin(),NumDims,extent_list_.begin());
     boost::detail::multi_array::
       copy_n(strides.begin(),NumDims,stride_list_.begin());
 
@@ -429,9 +429,9 @@ public: // should be private
   // generate array views
   template <typename ExtentList, typename Index>
   explicit multi_array_view(T* base,
-                            const ExtentList& extents,
+                            const ExtentList& _extents,
                             const boost::array<Index,NumDims>& strides) :
-    super_type(base,extents,strides) { }
+    super_type(base,_extents,strides) { }
 
 };
 

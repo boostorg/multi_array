@@ -176,10 +176,10 @@ public:  // Should be protected
 #endif
 
   const_sub_array (TPtr base,
-                 const size_type* extents,
+                 const size_type* _extents,
                  const index* strides,
                  const index* index_base) :
-    base_(base), extents_(extents), strides_(strides),
+    base_(base), extents_(_extents), strides_(strides),
     index_base_(index_base) {
   }
 
@@ -356,10 +356,10 @@ public: // should be private
 #endif
 
   sub_array (T* base,
-            const size_type* extents,
+            const size_type* _extents,
             const index* strides,
             const index* index_base) :
-    super_type(base,extents,strides,index_base) {
+    super_type(base,_extents,strides,index_base) {
   }
 
 };

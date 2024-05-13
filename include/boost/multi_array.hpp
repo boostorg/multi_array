@@ -158,7 +158,7 @@ public:
 
   template <class ExtentList>
   explicit multi_array(
-      ExtentList const& extents,
+      ExtentList const& _extents,
       const Allocator& alloc = Allocator()
 #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
       , typename mpl::if_<
@@ -166,7 +166,7 @@ public:
       int&,int>::type* = 0
 #endif
       ) :
-    super_type((T*)initial_base_,extents),
+    super_type((T*)initial_base_,_extents),
     alloc_base(boost::empty_init_t(),alloc) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
@@ -175,9 +175,9 @@ public:
 
     
   template <class ExtentList>
-  explicit multi_array(ExtentList const& extents,
+  explicit multi_array(ExtentList const& _extents,
                        const general_storage_order<NumDims>& so) :
-    super_type((T*)initial_base_,extents,so),
+    super_type((T*)initial_base_,_extents,so),
     alloc_base(boost::empty_init_t()) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
@@ -185,10 +185,10 @@ public:
   }
 
   template <class ExtentList>
-  explicit multi_array(ExtentList const& extents,
+  explicit multi_array(ExtentList const& _extents,
                        const general_storage_order<NumDims>& so,
                        Allocator const& alloc) :
-    super_type((T*)initial_base_,extents,so),
+    super_type((T*)initial_base_,_extents,so),
     alloc_base(boost::empty_init_t(),alloc) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
@@ -433,7 +433,7 @@ public:
 
 
   template <typename ExtentList>
-  multi_array& resize(const ExtentList& extents) {
+  multi_array& resize(const ExtentList& _extents) {
     boost::function_requires<
       detail::multi_array::CollectionConcept<ExtentList> >();
 
@@ -442,7 +442,7 @@ public:
 
     for (int i=0; i != NumDims; ++i) {
       typedef typename gen_type::range range_type;
-      ranges.ranges_[i] = range_type(0,extents[i]);
+      ranges.ranges_[i] = range_type(0,_extents[i]);
     }
     
     return this->resize(ranges);

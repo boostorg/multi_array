@@ -128,15 +128,15 @@ protected:
   // used by array operator[] and iterators to get reference types.
   template <typename Reference, typename TPtr>
   Reference access(boost::type<Reference>,index idx,TPtr base,
-                   const size_type* extents,
+                   const size_type* _extents,
                    const index* strides,
                    const index* index_bases) const {
 
     BOOST_ASSERT(idx - index_bases[0] >= 0);
-    BOOST_ASSERT(size_type(idx - index_bases[0]) < extents[0]);
+    BOOST_ASSERT(size_type(idx - index_bases[0]) < _extents[0]);
     // return a sub_array<T,NDims-1> proxy object
     TPtr newbase = base + idx * strides[0];
-    return Reference(newbase,extents+1,strides+1,index_bases+1);
+    return Reference(newbase,_extents+1,strides+1,index_bases+1);
 
   }
 
@@ -168,14 +168,14 @@ protected:
   // used by array operator[] and iterators to get reference types.
   template <typename Reference, typename TPtr>
   Reference access(boost::type<Reference>,index idx,TPtr base,
-                   const size_type* extents,
+                   const size_type* _extents,
                    const index* strides,
                    const index* index_bases) const {
 
     ignore_unused_variable_warning(index_bases);
-    ignore_unused_variable_warning(extents);
+    ignore_unused_variable_warning(_extents);
     BOOST_ASSERT(idx - index_bases[0] >= 0);
-    BOOST_ASSERT(size_type(idx - index_bases[0]) < extents[0]);
+    BOOST_ASSERT(size_type(idx - index_bases[0]) < _extents[0]);
     return *(base + idx * strides[0]);
   }
 
@@ -299,17 +299,17 @@ protected:
   Reference access_element(boost::type<Reference>,
                            const IndexList& indices,
                            TPtr base,
-                           const size_type* extents,
+                           const size_type* _extents,
                            const index* strides,
                            const index* index_bases) const {
     boost::function_requires<
       CollectionConcept<IndexList> >();
     ignore_unused_variable_warning(index_bases);
-    ignore_unused_variable_warning(extents);
+    ignore_unused_variable_warning(_extents);
 #if !defined(NDEBUG) && !defined(BOOST_DISABLE_ASSERTS)
     for (size_type i = 0; i != NumDims; ++i) {
       BOOST_ASSERT(indices[i] - index_bases[i] >= 0);
-      BOOST_ASSERT(size_type(indices[i] - index_bases[i]) < extents[i]);
+      BOOST_ASSERT(size_type(indices[i] - index_bases[i]) < _extents[i]);
     }
 #endif
 
@@ -408,7 +408,7 @@ protected:
   generate_array_view(boost::type<ArrayRef>,
                       const boost::detail::multi_array::
                       index_gen<NumDims,NDims>& indices,
-                      const size_type* extents,
+                      const size_type* _extents,
                       const index* strides,
                       const index* index_bases,
                       TPtr base) const {
@@ -422,7 +422,7 @@ protected:
 
       // Use array specs and input specs to produce real specs.
       const index default_start = index_bases[n];
-      const index default_finish = default_start+extents[n];
+      const index default_finish = default_start+_extents[n];
       const index_range& current_range = indices.ranges_[n];
       index start = current_range.get_start(default_start);
       index finish = current_range.get_finish(default_finish);
@@ -453,8 +453,8 @@ protected:
       // exactly in the set of legal indices
       // with a special case for empty arrays
       BOOST_ASSERT(index_bases[n] <= start &&
-                   ((start <= index_bases[n]+index(extents[n])) ||
-                     (start == index_bases[n] && extents[n] == 0)));
+                   ((start <= index_bases[n]+index(_extents[n])) ||
+                     (start == index_bases[n] && _extents[n] == 0)));
 
 #ifndef BOOST_DISABLE_ASSERTS
       // finish marks the open side of the range, so it can go one past
@@ -462,7 +462,7 @@ protected:
       // if stride is negative).
       index bound_adjustment = stride < 0 ? 1 : 0;
       BOOST_ASSERT(((index_bases[n] - bound_adjustment) <= finish) &&
-        (finish <= (index_bases[n] + index(extents[n]) - bound_adjustment)));
+        (finish <= (index_bases[n] + index(_extents[n]) - bound_adjustment)));
       ignore_unused_variable_warning(bound_adjustment);
 #endif // BOOST_DISABLE_ASSERTS
 

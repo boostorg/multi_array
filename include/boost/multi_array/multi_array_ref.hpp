@@ -87,24 +87,24 @@ public:
       num_elements_(other.num_elements_)  {  }
 
   template <typename ExtentList>
-  explicit const_multi_array_ref(TPtr base, const ExtentList& extents) :
+  explicit const_multi_array_ref(TPtr base, const ExtentList& _extents) :
     base_(base), storage_(c_storage_order()) {
     boost::function_requires<
       CollectionConcept<ExtentList> >();
 
     index_base_list_.assign(0);
-    init_multi_array_ref(extents.begin());
+    init_multi_array_ref(_extents.begin());
   }
   
   template <typename ExtentList>
-  explicit const_multi_array_ref(TPtr base, const ExtentList& extents,
+  explicit const_multi_array_ref(TPtr base, const ExtentList& _extents,
                        const general_storage_order<NumDims>& so) : 
     base_(base), storage_(so) {
     boost::function_requires<
       CollectionConcept<ExtentList> >();
 
     index_base_list_.assign(0);
-    init_multi_array_ref(extents.begin());
+    init_multi_array_ref(_extents.begin());
   }
   
   explicit const_multi_array_ref(TPtr base,
@@ -162,14 +162,14 @@ public:
   }
 
   template <typename SizeList>
-  void reshape(const SizeList& extents) {
+  void reshape(const SizeList& _extents) {
     boost::function_requires<
       CollectionConcept<SizeList> >();
     BOOST_ASSERT(num_elements_ ==
-                 std::accumulate(extents.begin(),extents.end(),
+                 std::accumulate(_extents.begin(),_extents.end(),
                                  size_type(1),std::multiplies<size_type>()));
 
-    std::copy(extents.begin(),extents.end(),extent_list_.begin());
+    std::copy(_extents.begin(),_extents.end(),extent_list_.begin());
     this->compute_strides(stride_list_,extent_list_,storage_);
 
     origin_offset_ =
@@ -325,7 +325,7 @@ public:
   const_multi_array_ref(TPtr base,
                         const storage_order_type& so,
                         const index * index_bases,
-                        const size_type* extents) :
+                        const size_type* _extents) :
     base_(base), storage_(so), origin_offset_(0), directional_offset_(0)
  {
    // If index_bases or extents is null, then initialize the corresponding
@@ -336,8 +336,8 @@ public:
    } else {
      std::fill_n(index_base_list_.begin(),NumDims,0);
    }
-   if(extents) {
-     init_multi_array_ref(extents);
+   if(_extents) {
+     init_multi_array_ref(_extents);
    } else {
      boost::array<index,NumDims> extent_list;
      extent_list.assign(0);
@@ -371,12 +371,12 @@ private:
               boost::mem_fun_ref(&extent_range::start));
 
     // calculate the extents
-    extent_list extents;
+    extent_list _extents;
     std::transform(ranges.ranges_.begin(),ranges.ranges_.end(),
-              extents.begin(),
+              _extents.begin(),
               boost::mem_fun_ref(&extent_range::size));
 
-    init_multi_array_ref(extents.begin());
+    init_multi_array_ref(_extents.begin());
   }
 
 
@@ -442,16 +442,16 @@ public:
   };
 
   template <class ExtentList>
-  explicit multi_array_ref(T* base, const ExtentList& extents) :
-    super_type(base,extents) {
+  explicit multi_array_ref(T* base, const ExtentList& _extents) :
+    super_type(base,_extents) {
     boost::function_requires<
       CollectionConcept<ExtentList> >();
   }
 
   template <class ExtentList>
-  explicit multi_array_ref(T* base, const ExtentList& extents,
+  explicit multi_array_ref(T* base, const ExtentList& _extents,
                            const general_storage_order<NumDims>& so) :
-    super_type(base,extents,so) {
+    super_type(base,_extents,so) {
     boost::function_requires<
       CollectionConcept<ExtentList> >();
   }
@@ -612,8 +612,8 @@ protected:
   explicit multi_array_ref(T* base,
                            const storage_order_type& so,
                            const index* index_bases,
-                           const size_type* extents) :
-    super_type(base,so,index_bases,extents) { }
+                           const size_type* _extents) :
+    super_type(base,so,index_bases,_extents) { }
 
 };
 
