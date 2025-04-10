@@ -40,7 +40,8 @@ jobs:
             gcc Shared
             msvc Shared x86
             mingw Shared
-          subrange-policy: one-per-minor
+          subrange-policy: |
+            msvc: one-per-minor
           trace-commands: true
   build:
     needs: cpp-matrix
