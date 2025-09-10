@@ -282,7 +282,7 @@ void reindex(const BaseList& values);
 </term>
 <listitem>
 <para>This changes the index bases of the <literal>multi_array</literal> to
-correspond to the the values in <literal>values</literal>.</para>
+correspond to the values in <literal>values</literal>.</para>
 
 <formalpara>
 <title><literal>BaseList</literal> Requirements</title>
