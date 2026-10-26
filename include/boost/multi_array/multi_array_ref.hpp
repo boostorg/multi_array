@@ -92,7 +92,7 @@ public:
     boost::function_requires<
       CollectionConcept<ExtentList> >();
 
-    index_base_list_.assign(0);
+    index_base_list_.fill(0);
     init_multi_array_ref(extents.begin());
   }
   
@@ -155,7 +155,7 @@ public:
   }
 
   void reindex(index value) {
-    index_base_list_.assign(value);
+    index_base_list_.fill(value);
     origin_offset_ =
       this->calculate_origin_offset(stride_list_,extent_list_,
                               storage_,index_base_list_);
